@@ -1,0 +1,48 @@
+{% extends "board/base.html" %}
+{% load static %}
+{% block head %}
+<meta name="csrf-token" content="{{ csrf_token }}">
+<link rel="stylesheet" href="{% static 'board/board.css' %}?v={{ asset_version }}">
+{% endblock %}
+{% block body %}
+<header class="topbar">
+  <nav id="crumbs" class="crumbs" aria-label="Breadcrumbs"></nav>
+  <div class="search-wrap">
+    <input id="search" class="search" type="search" placeholder="Search  ( / )" aria-label="Search" autocomplete="off">
+    <div id="search-results" class="search-results" role="listbox" hidden></div>
+  </div>
+  <button type="button" id="search-button" class="search-button">Search</button>
+  <button type="button" id="view-toggle" class="view-toggle">List</button>
+  <div class="zoom">
+    <button type="button" id="zoom-out" aria-label="Zoom out">-</button>
+    <span id="zoom-label">100%</span>
+    <button type="button" id="zoom-in" aria-label="Zoom in">+</button>
+    <button type="button" id="zoom-fit">Fit</button>
+  </div>
+  <button type="button" id="menu-button" aria-haspopup="menu">Menu</button>
+  <form id="logout-form" method="post" action="{% url 'logout' %}" hidden>{% csrf_token %}</form>
+</header>
+<section class="week" aria-label="Due this week">
+  <span class="week-title">This Week</span>
+  <div id="week-items" class="week-items"></div>
+</section>
+<main id="viewport">
+  <div id="canvas"></div>
+</main>
+<main id="board-list" class="board-list"></main>
+<div id="project-page">
+  <div id="project-tabs" class="project-tabs" role="tablist">
+    <button type="button" data-tab="list">List</button>
+    <button type="button" data-tab="board">Board</button>
+  </div>
+  <div class="project-body">
+    <div id="project-side" class="project-side"></div>
+    <div id="project-board" class="project-board"></div>
+  </div>
+</div>
+<div id="toasts" class="toasts" aria-live="polite"></div>
+{{ layout|json_script:"layout" }}
+{{ prefs|json_script:"prefs" }}
+{% for name in scripts %}<script src="{% static 'board/'|add:name %}?v={{ asset_version }}"></script>
+{% endfor %}
+{% endblock %}

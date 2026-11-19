@@ -1,0 +1,27 @@
+{% extends "board/base.html" %}
+{% block title %}Log in{% endblock %}
+{% block head %}
+<style>
+  .login { max-width: 320px; margin: 15vh auto; padding: 24px; background: var(--card);
+           border: 1px solid var(--line); border-radius: 6px; }
+  .login h1 { font-size: 18px; margin: 0 0 16px; }
+  .login label { display: block; margin: 10px 0 4px; color: var(--muted); font-size: 13px; }
+  .login input { width: 100%; padding: 8px; border: 1px solid var(--line); border-radius: 4px; }
+  .login button { margin-top: 16px; width: 100%; padding: 9px; border: 1px solid var(--ink);
+                  background: var(--ink); color: #fff; border-radius: 4px; cursor: pointer; }
+  .error { color: #b3261e; font-size: 13px; }
+</style>
+{% endblock %}
+{% block body %}
+<form class="login" method="post">
+  {% csrf_token %}
+  <h1>Whiteboard</h1>
+  {% if locked %}<p class="error">Too many failed attempts. Try again in 15 minutes.</p>
+  {% elif form.errors %}<p class="error">Username or password is incorrect.</p>{% endif %}
+  <label for="id_username">Username</label>
+  <input id="id_username" name="username" autocomplete="username" autofocus required>
+  <label for="id_password">Password</label>
+  <input id="id_password" name="password" type="password" autocomplete="current-password" required>
+  <button type="submit">Log in</button>
+</form>
+{% endblock %}
